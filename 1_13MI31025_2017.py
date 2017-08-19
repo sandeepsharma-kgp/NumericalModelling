@@ -3,6 +3,8 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 ####### poly function to return f(x) for any given x ##################
+
+
 def poly(x, arr):
     ans = 0
     for i in range(len(arr)):
@@ -10,6 +12,8 @@ def poly(x, arr):
     return ans
 
 ########### use simpson 1/3 rule for integration ############
+
+
 def simpson(a, b, n, arr):
     h = (b - a) / float(n)
     sections = n
@@ -25,6 +29,8 @@ def simpson(a, b, n, arr):
     return apx * h / 3.0
 
 ########### use trapezoidal 1/3 rule for integration ############
+
+
 def trapezoidal(a, b, n, arr):
     h = (b - a) / float(n)
     sections = n
@@ -50,7 +56,8 @@ if __name__ == "__main__":
     b = float(raw_input("Enter upper limit: "))
 
     ############## Simpson's 1/3rd rule ##########################
-    n = int(raw_input("n  is no. of subintervals \nFor Simpson menthod ,enter n(must be even): "))
+    n = int(raw_input(
+        "n  is no. of subintervals \nFor Simpson menthod ,enter n(must be even): "))
     print "Area using Simpson 1/3rd rule: ", simpson(a, b, n, arr)
 
     ######### To analyse simpson's rule getting area at various points ##############
@@ -72,7 +79,7 @@ if __name__ == "__main__":
     n = int(raw_input("For Trapezoidal menthod ,enter n: "))
     print "Area using Trapezoidal rule: ", trapezoidal(a, b, n, arr)
 
-    ######### To analyse trapezoidal's rule getting area at various points ##############
+    ######### To analyse trapezoidal's rule getting area at various points ###
     n_trapezoidal = []
     area_trapezoidal = []
     sections = n
@@ -80,7 +87,7 @@ if __name__ == "__main__":
         n_trapezoidal.append(n)
         n -= 10
     n = sections + 50
-    while(n <= sections + 1000 ):
+    while(n <= sections + 1000):
         n_trapezoidal.append(n)
         n += 50
     n_trapezoidal.sort()
@@ -95,13 +102,13 @@ if __name__ == "__main__":
     area = np.full((1, len(n_trapezoidal)), I[0], dtype=float)
     area_diff_trapezoidal = area[0] - area_trapezoidal
     area_diff_trapezoidal = np.absolute(area_diff_trapezoidal)
-    area_diff_trapezoidal = area_diff_trapezoidal*100/area[0]
+    area_diff_trapezoidal = area_diff_trapezoidal * 100 / area[0]
 
     area_simpson = np.array(area_simpson, dtype=float)
     area = np.full((1, len(n_simpson)), I[0], dtype=float)
     area_diff_simpson = area[0] - area_simpson
     area_diff_simpson = np.absolute(area_diff_simpson)
-    area_diff_simpson = area_diff_simpson*100/area[0]
+    area_diff_simpson = area_diff_simpson * 100 / area[0]
 
     ########### plotting %age error v/s number of subintervals ##########
     plt.close()
@@ -116,5 +123,6 @@ if __name__ == "__main__":
     plt.title("SIMPSON'S 1/3rd RULE ANALYSIS")
     plt.xlabel('Number of subintervals')
     plt.ylabel('% Error')
-    plt.ylim(area_diff_trapezoidal[-1] - 10*np.mean(area_diff_trapezoidal), area_diff_trapezoidal[0])
+    plt.ylim(area_diff_trapezoidal[-1] - 10 *
+             np.mean(area_diff_trapezoidal), area_diff_trapezoidal[0])
     plt.show()

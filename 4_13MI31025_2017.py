@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import spline
 
+# borehole data matrix and dataframe
 bd = np.matrix([[44., -1., 40., 42., 40., 39., 37., 36., -1.],
                 [42., -1., 43., 42., 39., 39., 41., 40., 36.],
                 [37., 37., 37., 35., 38., 37., 37., 33., 34.],
@@ -15,8 +16,11 @@ C = pd.Index([0, 100, 200, 300, 400, 500, 600, 700, 800],
              name="EW Borehole distance(in m.)")
 df_bd = pd.DataFrame(data=bd, index=I, columns=C)
 
+# E-W direction semivariogram calculation
 ew_variogram = np.array([])
 sum_ = 0
+
+# 100 m. gap
 for i in range(0, 800, 100):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 100] > 0)]
     if np.square((df[i] - df[i + 100]).values).sum():
@@ -24,6 +28,7 @@ for i in range(0, 800, 100):
 
 ew_variogram = np.append(ew_variogram, sum_)
 
+# 200 m. gap
 sum_ = 0
 for i in range(0, 700, 100):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 200] > 0)]
@@ -32,6 +37,7 @@ for i in range(0, 700, 100):
 
 ew_variogram = np.append(ew_variogram, sum_)
 
+# 300 m. gap
 sum_ = 0
 for i in range(0, 600, 100):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 300] > 0)]
@@ -40,6 +46,7 @@ for i in range(0, 600, 100):
 
 ew_variogram = np.append(ew_variogram, sum_)
 
+# 400 m. gap
 sum_ = 0
 for i in range(0, 500, 100):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 400] > 0)]
@@ -48,6 +55,7 @@ for i in range(0, 500, 100):
 
 ew_variogram = np.append(ew_variogram, sum_)
 
+# 500 m. gap
 sum_ = 0
 for i in range(0, 400, 100):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 500] > 0)]
@@ -56,11 +64,16 @@ for i in range(0, 400, 100):
 
 ew_variogram = np.append(ew_variogram, sum_)
 
+# list of all above semivariogram values
 ew_semivariogram = ew_variogram / 2
 
+
+# transpose of borehole data matrix to apply same column operation on rows
+# to calculate N-S semivariogram
 df_bd_T = df_bd.transpose()
 ns_variogram = np.array([])
 
+# 100m. gap
 sum_ = 0
 for i in range(0, 500, 100):
     df = df_bd_T.loc[(df_bd_T[i] > 0) & (df_bd_T[i + 100] > 0)]
@@ -69,6 +82,7 @@ for i in range(0, 500, 100):
 
 ns_variogram = np.append(ns_variogram, sum_)
 
+# 200m. gap
 sum_ = 0
 for i in range(0, 400, 100):
     df = df_bd_T.loc[(df_bd_T[i] > 0) & (df_bd_T[i + 200] > 0)]
@@ -77,6 +91,7 @@ for i in range(0, 400, 100):
 
 ns_variogram = np.append(ns_variogram, sum_)
 
+# 300m. gap
 sum_ = 0
 for i in range(0, 300, 100):
     df = df_bd_T.loc[(df_bd_T[i] > 0) & (df_bd_T[i + 300] > 0)]
@@ -85,6 +100,7 @@ for i in range(0, 300, 100):
 
 ns_variogram = np.append(ns_variogram, sum_)
 
+# 400m. gap
 sum_ = 0
 for i in range(0, 200, 100):
     df = df_bd_T.loc[(df_bd_T[i] > 0) & (df_bd_T[i + 400] > 0)]
@@ -93,6 +109,7 @@ for i in range(0, 200, 100):
 
 ns_variogram = np.append(ns_variogram, sum_)
 
+# 500m. gap
 sum_ = 0
 for i in range(0, 100, 100):
     df = df_bd_T.loc[(df_bd_T[i] > 0) & (df_bd_T[i + 500] > 0)]
@@ -101,13 +118,16 @@ for i in range(0, 100, 100):
 
 ns_variogram = np.append(ns_variogram, sum_)
 
+# list of all above semivariogram values in N-S direction
 ns_semivariogram = ns_variogram / 2
 
 
+# function to rotate data matrix by 45 degree to make same row operation
+# to calculate N-E semivariogram
 def rotate45(array):
     rot = []
     for i in range(len(array)):
-        rot.append([0] * (len(array)+len(array[0])-1))
+        rot.append([0] * (len(array) + len(array[0]) - 1))
         for j in range(len(array[i])):
             rot[i][int(i + j)] = array[i][j]
     return rot
@@ -116,6 +136,8 @@ df_bd = pd.DataFrame(data=np.matrix(rotate45(bd.transpose().tolist())))
 df_bd = df_bd.transpose()
 
 ne_variogram = np.array([])
+
+#100*1.414 m. gap
 sum_ = 0
 for i in range(0, 8):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 1] > 0)]
@@ -124,6 +146,8 @@ for i in range(0, 8):
 
 ne_variogram = np.append(ne_variogram, sum_)
 
+
+#200*1.414 m. gap
 sum_ = 0
 for i in range(0, 7):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 2] > 0)]
@@ -132,6 +156,7 @@ for i in range(0, 7):
 
 ne_variogram = np.append(ne_variogram, sum_)
 
+#300*1.414 m. gap
 sum_ = 0
 for i in range(0, 6):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 3] > 0)]
@@ -140,6 +165,7 @@ for i in range(0, 6):
 
 ne_variogram = np.append(ne_variogram, sum_)
 
+#400*1.414 m. gap
 sum_ = 0
 for i in range(0, 5):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 4] > 0)]
@@ -148,6 +174,7 @@ for i in range(0, 5):
 
 ne_variogram = np.append(ne_variogram, sum_)
 
+#500*1.414 m. gap
 sum_ = 0
 for i in range(0, 4):
     df = df_bd.loc[(df_bd[i] > 0) & (df_bd[i + 5] > 0)]
@@ -156,8 +183,11 @@ for i in range(0, 4):
 
 ne_variogram = np.append(ne_variogram, sum_)
 
+#list of semivariogram values in N-E direction
 ne_semivariogram = ne_variogram / 2
 
+
+#2D plots and printing of solutions
 T = np.array([0, 1, 2, 3, 4])
 xnew = np.linspace(T.min(), T.max(), 300)
 
@@ -165,31 +195,34 @@ ew_semivariogram_smooth = spline(T, ew_semivariogram, xnew)
 ns_semivariogram_smooth = spline(T, ns_semivariogram, xnew)
 ne_semivariogram_smooth = spline(T, ne_semivariogram, xnew)
 print "Semivariogram values:"
-print "E-W Direction at(100, 200, 300, 400, 500)m.:         ",ew_semivariogram
-print "N-S Direction at(100, 200, 300, 400, 500)m.:         ",ns_semivariogram
-print "N-E Direction at(100, 200, 300, 400, 500)*(1.414)m.: ",ne_semivariogram
+print "E-W Direction at(100, 200, 300, 400, 500)m.:         ", ew_semivariogram
+print "N-S Direction at(100, 200, 300, 400, 500)m.:         ", ns_semivariogram
+print "N-E Direction at(100, 200, 300, 400, 500)*(1.414)m.: ", ne_semivariogram
 
 plt.close()
 plt.figure(figsize=(30, 6))
 plt.subplot(131)
-plt.plot(xnew, ew_semivariogram_smooth,'-r',label='smoothed')
-plt.plot(T,ew_semivariogram,'-b',label='actual')
+plt.plot(xnew, ew_semivariogram_smooth, '-r', label='smoothed')
+plt.plot(T, ew_semivariogram, '--b', label='actual')
 plt.legend()
-plt.title("E-W Direction")
+plt.ylim(0,60)
+plt.title("E-W Direction Semivariogram")
 plt.xlabel('Boreholes distance(1 unit = 100m.)')
 plt.ylabel('% Fe')
 plt.subplot(132)
-plt.plot(xnew, ns_semivariogram_smooth,'-r',label='smoothed')
-plt.plot(T,ns_semivariogram,'-b',label='actual')
+plt.plot(xnew, ns_semivariogram_smooth, '-r', label='smoothed')
+plt.plot(T, ns_semivariogram, '--b', label='actual')
 plt.legend()
-plt.title("N-S Direction")
+plt.ylim(0,60)
+plt.title("N-S Direction Semivariogram")
 plt.xlabel('Boreholes distance(1 unit = 100m.)')
 plt.ylabel('% Fe')
 plt.subplot(133)
-plt.plot(xnew, ne_semivariogram_smooth,'-r',label='smoothed')
-plt.plot(T,ne_semivariogram,'-b',label='actual')
-plt.legend() 
-plt.title("N-E Direction")
+plt.plot(xnew, ne_semivariogram_smooth, '-r', label='smoothed')
+plt.plot(T, ne_semivariogram, '--b', label='actual')
+plt.legend()
+plt.ylim(0,60)
+plt.title("N-E Direction Semivariogram")
 plt.xlabel('Boreholes distance(1 unit = 141.42m.)')
 plt.ylabel('% Fe')
 plt.show()
