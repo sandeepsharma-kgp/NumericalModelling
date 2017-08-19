@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -55,7 +56,7 @@ for i in range(0, 400, 100):
 
 ew_variogram = np.append(ew_variogram, sum_)
 
-ew_variogram = ew_variogram / 2
+ew_semivariogram = ew_variogram / 2
 
 df_bd_T = df_bd.transpose()
 ns_variogram = np.array([])
@@ -100,18 +101,18 @@ for i in range(0, 100, 100):
 
 ns_variogram = np.append(ns_variogram, sum_)
 
-ns_variogram = ns_variogram / 2
+ns_semivariogram = ns_variogram / 2
 
 
-def shear_45_ccw(array):
-    ret = []
+def rotate45(array):
+    rot = []
     for i in range(len(array)):
-        ret.append([0] * 14)
+        rot.append([0] * (len(array)+len(array[0])-1))
         for j in range(len(array[i])):
-            ret[i][int(i + j)] = array[i][j]
-    return ret
+            rot[i][int(i + j)] = array[i][j]
+    return rot
 
-df_bd = pd.DataFrame(data=np.matrix(shear_45_ccw(bd.transpose().tolist())))
+df_bd = pd.DataFrame(data=np.matrix(rotate45(bd.transpose().tolist())))
 df_bd = df_bd.transpose()
 
 ne_variogram = np.array([])
@@ -155,13 +156,40 @@ for i in range(0, 4):
 
 ne_variogram = np.append(ne_variogram, sum_)
 
-ne_variogram = ne_variogram / 2
+ne_semivariogram = ne_variogram / 2
 
 T = np.array([0, 1, 2, 3, 4])
 xnew = np.linspace(T.min(), T.max(), 300)
 
-power_smooth = spline(T, ne_variogram, xnew)
+ew_semivariogram_smooth = spline(T, ew_semivariogram, xnew)
+ns_semivariogram_smooth = spline(T, ns_semivariogram, xnew)
+ne_semivariogram_smooth = spline(T, ne_semivariogram, xnew)
+print "Semivariogram values:"
+print "E-W Direction at(100, 200, 300, 400, 500)m.:         ",ew_semivariogram
+print "N-S Direction at(100, 200, 300, 400, 500)m.:         ",ns_semivariogram
+print "N-E Direction at(100, 200, 300, 400, 500)*(1.414)m.: ",ne_semivariogram
 
-plt.plot(xnew, power_smooth)
-plt.plot(ne_variogram)
+plt.close()
+plt.figure(figsize=(30, 6))
+plt.subplot(131)
+plt.plot(xnew, ew_semivariogram_smooth,'-r',label='smoothed')
+plt.plot(T,ew_semivariogram,'-b',label='actual')
+plt.legend()
+plt.title("E-W Direction")
+plt.xlabel('Boreholes distance(1 unit = 100m.)')
+plt.ylabel('% Fe')
+plt.subplot(132)
+plt.plot(xnew, ns_semivariogram_smooth,'-r',label='smoothed')
+plt.plot(T,ns_semivariogram,'-b',label='actual')
+plt.legend()
+plt.title("N-S Direction")
+plt.xlabel('Boreholes distance(1 unit = 100m.)')
+plt.ylabel('% Fe')
+plt.subplot(133)
+plt.plot(xnew, ne_semivariogram_smooth,'-r',label='smoothed')
+plt.plot(T,ne_semivariogram,'-b',label='actual')
+plt.legend() 
+plt.title("N-E Direction")
+plt.xlabel('Boreholes distance(1 unit = 141.42m.)')
+plt.ylabel('% Fe')
 plt.show()
