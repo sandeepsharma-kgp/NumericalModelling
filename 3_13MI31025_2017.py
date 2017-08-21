@@ -113,6 +113,7 @@ print "\nGiven Wp matrix: "
 print "\n", df_wp, "\n"
 print "\n", "Calculated FOS matrix: ", "\n"
 print df_F
+print "\nMean FOS: ",df_F.mean().mean()
 plt.title('Factor of Safety')
 plt.xlabel('Gallery Width')
 plt.ylabel('Ore Depth')
