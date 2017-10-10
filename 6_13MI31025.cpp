@@ -10,7 +10,6 @@ void findvalues(int atmclass,float x);
 float findconc(float x);
 int main ()
 {	//250,2,15,140,25,5,0.002,1,2,2.5,2
-    printf("%f\n",&Q);
 	printf("Enter the height of the stack(in mts)  : ");
 	scanf("%f",&hdash);
 	printf("Enter Stack inside radius(in mts)      : ");
