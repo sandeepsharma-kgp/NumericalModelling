@@ -15,7 +15,7 @@ ym = 50
 R = (xc**2+yc**2)**0.5
 xm = xc + (R**2 - (H-yc)**2)**(0.5)
 
-n = 10000
+n = 10
 dx = xm/n
 print dx
 x_fixed = H/math.tan(beta)
@@ -43,7 +43,9 @@ for i in range(n):
 	h_is.append(h_i)
 	alpha_is.append(alpha_i)
 	w_is.append(w_i)
-
+print h_is
+print alpha_is
+print w_is
 fos_old = 2.0
 fos_new = 1.0
 
@@ -56,7 +58,7 @@ while(math.fabs(fos_old - fos_new) > 0.0001):
 	denominator = 0.0
 
 	for h_i, alpha_i,w_i in zip(h_is, alpha_is,w_is):
-		numerator += (c+vr*h_i*math.tan(phi)*dx/math.cos(alpha_i))/(1.+(math.tan(alpha_i)*math.tan(phi))/fos_old)
+		numerator += ((c+vr*h_i*math.tan(phi))*dx/math.cos(alpha_i))/(1.+(math.tan(alpha_i)*math.tan(phi))/fos_old)
 		denominator += w_i*math.sin(alpha_i)
 
 	fos_new = numerator/denominator
