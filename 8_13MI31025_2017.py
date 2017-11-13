@@ -10,7 +10,7 @@ def fos(beta, xc, yc, H, n):
 	vr = 1500
 	c = 7000
 
-	ym = 50
+	ym = H
 	R = (xc**2 + yc**2)**0.5
 	xm = xc + (R**2 - (ym - yc)**2)**0.5
 
@@ -56,27 +56,33 @@ def fos(beta, xc, yc, H, n):
 		error = fos_new - fos_old
 		fos_old = fos_new
 
-	return fos_new
+	return fos_new,R
 
 
 def fos_matrix(beta, H, n, xl, yl, xr, yr):
-	fos_l = []
-
+	min_fos = 100000
+	xc = 0
+	yc = 0
+	r = 0
 	for i in range(xl, xr + 1):
 		for j in range(yr, yl + 1):
-			fos_l.append(fos(beta, i, j, H, n))
+			fos_,R = fos(beta, i, j, H, n)
+			if fos_ < min_fos:
+				min_fos = fos_
+				r = R
+				xc = i
+				yc = j
 
-	fos_l.sort()
-	return fos_l[0]
+	return min_fos,xc,yc,r
 
 
 if __name__ == "__main__":
-	beta = input("Enter slope angle: ")
-	H = input("Enter slope height: ")
+	beta = input("Enter slope angle(in degree): ")
+	H = input("Enter slope height(in m.): ")
 	n = input("Enter number of sections: ")
 	xl = input("Enter co-ordinates for Rectangular area of centers of slope failure circles.\n\nEnter top-left-most x coordinate: ")
 	yl = input("Enter top-left-most y coordinate: ")
 	xr = input("Enter bottom-right-most x coordinate: ")
 	yr = input("Enter bottom-right-most y coordinate: ")
-
-	print "Using Bishop's method minimum FOS is found out to be: ",fos_matrix(beta,H,n,xl,yl,xr,yr)
+	min_fos,xc,yc,r = fos_matrix(beta,H,n,xl,yl,xr,yr)
+	print "Using Bishop's method minimum FOS is found out to be: ", min_fos ," by the failure circle of radius " ,r," m. centered at: (",xc,",",yc,")."

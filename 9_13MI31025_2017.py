@@ -6,6 +6,7 @@ import numpy as np
 
 def subsidence_plot(delta, D, W, L, gs=10):
     def influence(r, R):
+    	## gs**2 is dA
         return (float)((1 / R**2) * np.exp(-(np.pi * r**2) / (R**2))) * gs**2
 
     def issafe(i, j, k, l, m, n, gs, R):
@@ -90,10 +91,10 @@ def subsidence_plot(delta, D, W, L, gs=10):
     plt.show()
 
 if __name__=="__main__":
-	delta = input("Enter delta: ")
-	D = input("Enter depth: ")
-	L = input("Enter length of the panel: ")
-	W = input("Enter width of the panel: ")
-	gs = input("Enter grid size(greater than 10 recommended): ")
+	delta = input("Enter angle of draw (in degree): ")
+	D = input("Enter depth(in m.): ")
+	L = input("Enter length of the panel(in m.): ")
+	W = input("Enter width of the panel(in m.): ")
+	gs = input("Enter grid size (greater than 8m. recommended): ")
 	print "Please wait for the plot!"
 	subsidence_plot(delta,D,W,L,gs)
